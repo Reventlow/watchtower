@@ -76,20 +76,19 @@ CSRF_TRUSTED_ORIGINS = config(
 
 
 # =============================================================================
-# DATABASE (Production - consider PostgreSQL)
+# DATABASE (Production)
 # =============================================================================
 
-# For production, you should use PostgreSQL instead of SQLite
-# Uncomment and configure when ready:
-#
-# import dj_database_url
-# DATABASES = {
-#     "default": dj_database_url.config(
-#         default=config("DATABASE_URL"),
-#         conn_max_age=600,
-#         conn_health_checks=True,
-#     )
-# }
+# Use SQLite in /data directory for Docker volume persistence
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "/data/db.sqlite3",
+        "OPTIONS": {
+            "init_command": "PRAGMA journal_mode=WAL;",
+        },
+    }
+}
 
 
 # =============================================================================
