@@ -98,8 +98,8 @@ COPY --chown=vagt:vagt scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-# Default command: run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "2", \
+# Default command: run gunicorn (using python -m to avoid shebang path issues)
+CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "2", \
      "--worker-class", "gthread", "--worker-tmp-dir", "/dev/shm", \
      "--access-logfile", "-", "--error-logfile", "-", \
      "--capture-output", "--enable-stdio-inheritance", \
