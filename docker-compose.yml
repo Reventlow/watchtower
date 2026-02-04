@@ -5,7 +5,7 @@
 
 services:
   web:
-    image: elohite/watchtower:0.1.5
+    image: elohite/watchtower:0.1.6
     build:
       context: .
       dockerfile: Dockerfile
