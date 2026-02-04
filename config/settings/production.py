@@ -79,11 +79,14 @@ CSRF_TRUSTED_ORIGINS = config(
 # DATABASE (Production)
 # =============================================================================
 
-# Use SQLite in /data directory for Docker volume persistence
+# Use SQLite in directory specified by SQLITE_DIR env var (default: /data)
+# This allows flexible volume mounting in Docker
+import os
+SQLITE_DIR = config("SQLITE_DIR", default="/data")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "/data/db.sqlite3",
+        "NAME": os.path.join(SQLITE_DIR, "db.sqlite3"),
         "OPTIONS": {
             "init_command": "PRAGMA journal_mode=WAL;",
         },
