@@ -31,16 +31,13 @@ urlpatterns = [
     path("api/", include("apps.api.urls", namespace="api")),
 ]
 
-# Debug toolbar URLs (only in development)
-if settings.DEBUG:
-    try:
-        import debug_toolbar
+# Debug toolbar URLs (only in development and if installed)
+if settings.DEBUG and "debug_toolbar" in settings.INSTALLED_APPS:
+    import debug_toolbar
 
-        urlpatterns = [
-            path("__debug__/", include(debug_toolbar.urls)),
-        ] + urlpatterns
-    except ImportError:
-        pass
+    urlpatterns = [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns
 
     # Serve media files in development
     from django.conf.urls.static import static
