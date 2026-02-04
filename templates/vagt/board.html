@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Vagtplan{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-6">
+    <!-- Board -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <!-- Header row -->
+        <div class="grid grid-cols-5 bg-gray-100 dark:bg-gray-700 border-b-2 border-gray-300 dark:border-gray-600">
+            <div class="px-4 py-3 font-bold text-gray-700 dark:text-gray-200">
+                <!-- Empty corner -->
+            </div>
+            {% for status_value, status_label in statuses %}
+            <div class="px-2 py-3 text-center font-bold text-gray-700 dark:text-gray-200 border-l border-gray-300 dark:border-gray-600">
+                {{ status_label }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Controller rows (auto-updates every 5 seconds) -->
+        <div id="board-rows"
+             hx-get="{% url 'vagt:board_rows' %}"
+             hx-trigger="every 5s"
+             hx-swap="innerHTML">
+            {% for item in controllers %}
+            {% with controller=item.controller last_log=item.last_log %}
+            {% include "vagt/partials/_controller_row.html" %}
+            {% endwith %}
+            {% empty %}
+            <div class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                Ingen controllere. Tilføj controllere via <a href="{% url 'vagt:controllers' %}" class="text-blue-600 hover:underline">Controllere</a>.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+        <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full bg-red-500"></span>
+            <span>Mødt (på vagt)</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full bg-green-500"></span>
+            <span>Gået (fri)</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full bg-amber-500"></span>
+            <span>Ferie / Syg</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

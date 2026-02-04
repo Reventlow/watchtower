@@ -1,0 +1,2 @@
+# Placeholder for locale/translation files
+# Run: python manage.py makemessages -l da

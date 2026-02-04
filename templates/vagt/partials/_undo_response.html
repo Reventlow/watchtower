@@ -1,0 +1,18 @@
+{# Response template for undo operation - includes row content and OOB swaps #}
+{# Context: assignment, status_info, all_statuses, can_undo, undo_seconds, shift, blocking_count, can_close_shift #}
+
+{# Main row content (replaces #controller-{id}) #}
+{% include "vagt/partials/_controller_row.html" %}
+
+{# OOB swap: Update the shift header with new blocking count #}
+<div id="shift-header" hx-swap-oob="innerHTML">
+    {% include "vagt/partials/_shift_header.html" %}
+</div>
+
+{# OOB swap: Update mobile card if it exists #}
+<div id="controller-card-{{ assignment.pk }}" hx-swap-oob="outerHTML">
+    {% include "vagt/partials/_controller_card.html" %}
+</div>
+
+{# OOB swap: Clear any existing undo toasts for this assignment #}
+<template id="clear-toast-{{ assignment.pk }}" hx-swap-oob="delete"></template>

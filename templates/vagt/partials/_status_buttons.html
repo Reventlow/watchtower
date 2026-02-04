@@ -1,0 +1,33 @@
+{# Status selection buttons for desktop table view #}
+{# Context: assignment, status_info, all_statuses #}
+
+<div class="flex items-center space-x-1">
+    {% for status in all_statuses %}
+        <button type="button"
+                hx-post="{% url 'vagt:update_status' assignment.pk %}"
+                hx-vals='{"status": "{{ status.value }}"}'
+                hx-target="#controller-{{ assignment.pk }}"
+                hx-swap="innerHTML"
+                hx-indicator="#loading-{{ assignment.pk }}"
+                class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800
+                       {% if assignment.status == status.value %}
+                           {{ status.btn_class }} ring-2 ring-offset-1 ring-blue-500 dark:ring-offset-gray-800
+                       {% else %}
+                           bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600
+                       {% endif %}"
+                title="{{ status.label }}{% if status.is_blocking %} (blokerer){% endif %}">
+            {% if status.is_blocking and assignment.status == status.value %}
+                <span class="w-1.5 h-1.5 bg-red-300 rounded-full mr-1"></span>
+            {% endif %}
+            {{ status.label }}
+        </button>
+    {% endfor %}
+
+    <!-- Loading indicator -->
+    <span id="loading-{{ assignment.pk }}" class="htmx-indicator ml-2">
+        <svg class="animate-spin h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </span>
+</div>

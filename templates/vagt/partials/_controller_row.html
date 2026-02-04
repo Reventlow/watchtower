@@ -1,0 +1,53 @@
+{# Row for a single controller - matches physical board layout #}
+<div id="controller-{{ controller.pk }}"
+     class="grid grid-cols-5 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750">
+
+    <!-- Name column -->
+    <div class="px-4 py-3 flex items-center">
+        <span class="text-sm font-medium text-gray-900 dark:text-white">
+            {{ controller.callsign }} {{ controller.name }}
+            {% if controller.note %}
+                <span class="text-gray-400 text-xs ml-1">{{ controller.note }}</span>
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- Status columns (FERIE, SYG, MØDT, GÅET) -->
+    {% for status_value, status_label in statuses %}
+    <div class="px-2 py-3 flex items-center justify-center border-l border-gray-200 dark:border-gray-700">
+        <div class="relative group">
+            <button type="button"
+                    hx-post="{% url 'vagt:set_status' controller.pk %}"
+                    hx-vals='{"status": "{{ status_value }}"}'
+                    hx-target="#controller-{{ controller.pk }}"
+                    hx-swap="outerHTML"
+                    class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150
+                           {% if controller.status == status_value %}
+                               {% if status_value == 'MOEDT' %}
+                                   bg-red-500 shadow-lg scale-110
+                               {% elif status_value == 'GAAET' %}
+                                   bg-green-500 shadow-lg scale-110
+                               {% else %}
+                                   bg-amber-500 shadow-lg scale-110
+                               {% endif %}
+                           {% else %}
+                               bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 hover:scale-105
+                           {% endif %}">
+            </button>
+
+            {% if controller.status == status_value and last_log %}
+            <!-- Tooltip on hover for active status -->
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2
+                        bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-lg shadow-lg
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                        pointer-events-none whitespace-nowrap z-50">
+                <div class="font-medium">{{ last_log.get_old_status_display }} → {{ last_log.get_new_status_display }}</div>
+                <div class="text-gray-300">{{ last_log.changed_by.username|default:"System" }} · {{ last_log.changed_at|date:"d/m H:i" }}</div>
+                <!-- Arrow -->
+                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,784 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Dokumentation{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==========================================================================
+       Pygments syntax highlighting - GitHub-inspired theme with dark mode
+       ========================================================================== */
+
+    /* Light mode syntax highlighting */
+    .highlight { background: #f6f8fa; }
+    .highlight .c { color: #6a737d; font-style: italic } /* Comment */
+    .highlight .err { color: #cb2431; background-color: #ffeef0 } /* Error */
+    .highlight .k { color: #d73a49; font-weight: bold } /* Keyword */
+    .highlight .o { color: #d73a49 } /* Operator */
+    .highlight .ch { color: #6a737d; font-style: italic } /* Comment.Hashbang */
+    .highlight .cm { color: #6a737d; font-style: italic } /* Comment.Multiline */
+    .highlight .cp { color: #d73a49; font-weight: bold } /* Comment.Preproc */
+    .highlight .cpf { color: #6a737d; font-style: italic } /* Comment.PreprocFile */
+    .highlight .c1 { color: #6a737d; font-style: italic } /* Comment.Single */
+    .highlight .cs { color: #6a737d; font-weight: bold; font-style: italic } /* Comment.Special */
+    .highlight .gd { color: #cb2431; background-color: #ffeef0 } /* Generic.Deleted */
+    .highlight .gi { color: #22863a; background-color: #f0fff4 } /* Generic.Inserted */
+    .highlight .go { color: #6a737d } /* Generic.Output */
+    .highlight .gp { color: #735c0f; font-weight: bold } /* Generic.Prompt */
+    .highlight .gs { font-weight: bold } /* Generic.Strong */
+    .highlight .gu { color: #6f42c1; font-weight: bold } /* Generic.Subheading */
+    .highlight .kc { color: #005cc5; font-weight: bold } /* Keyword.Constant */
+    .highlight .kd { color: #d73a49; font-weight: bold } /* Keyword.Declaration */
+    .highlight .kn { color: #d73a49; font-weight: bold } /* Keyword.Namespace */
+    .highlight .kp { color: #d73a49 } /* Keyword.Pseudo */
+    .highlight .kr { color: #d73a49; font-weight: bold } /* Keyword.Reserved */
+    .highlight .kt { color: #d73a49 } /* Keyword.Type */
+    .highlight .m { color: #005cc5 } /* Literal.Number */
+    .highlight .s { color: #032f62 } /* Literal.String */
+    .highlight .na { color: #6f42c1 } /* Name.Attribute */
+    .highlight .nb { color: #005cc5 } /* Name.Builtin */
+    .highlight .nc { color: #6f42c1; font-weight: bold } /* Name.Class */
+    .highlight .no { color: #005cc5 } /* Name.Constant */
+    .highlight .nd { color: #6f42c1 } /* Name.Decorator */
+    .highlight .ni { color: #735c0f } /* Name.Entity */
+    .highlight .ne { color: #d73a49; font-weight: bold } /* Name.Exception */
+    .highlight .nf { color: #6f42c1; font-weight: bold } /* Name.Function */
+    .highlight .nl { color: #005cc5 } /* Name.Label */
+    .highlight .nn { color: #6f42c1 } /* Name.Namespace */
+    .highlight .nt { color: #22863a } /* Name.Tag */
+    .highlight .nv { color: #e36209 } /* Name.Variable */
+    .highlight .ow { color: #d73a49; font-weight: bold } /* Operator.Word */
+    .highlight .p { color: #24292e } /* Punctuation */
+    .highlight .py { color: #005cc5 } /* Name.Property */
+    .highlight .mb { color: #005cc5 } /* Literal.Number.Bin */
+    .highlight .mf { color: #005cc5 } /* Literal.Number.Float */
+    .highlight .mh { color: #005cc5 } /* Literal.Number.Hex */
+    .highlight .mi { color: #005cc5 } /* Literal.Number.Integer */
+    .highlight .mo { color: #005cc5 } /* Literal.Number.Oct */
+    .highlight .sa { color: #032f62 } /* Literal.String.Affix */
+    .highlight .sb { color: #032f62 } /* Literal.String.Backtick */
+    .highlight .sc { color: #032f62 } /* Literal.String.Char */
+    .highlight .dl { color: #032f62 } /* Literal.String.Delimiter */
+    .highlight .sd { color: #032f62 } /* Literal.String.Doc */
+    .highlight .s2 { color: #032f62 } /* Literal.String.Double */
+    .highlight .se { color: #032f62 } /* Literal.String.Escape */
+    .highlight .sh { color: #032f62 } /* Literal.String.Heredoc */
+    .highlight .si { color: #005cc5 } /* Literal.String.Interpol */
+    .highlight .sx { color: #032f62 } /* Literal.String.Other */
+    .highlight .sr { color: #032f62 } /* Literal.String.Regex */
+    .highlight .s1 { color: #032f62 } /* Literal.String.Single */
+    .highlight .ss { color: #005cc5 } /* Literal.String.Symbol */
+    .highlight .bp { color: #005cc5 } /* Name.Builtin.Pseudo */
+    .highlight .fm { color: #6f42c1; font-weight: bold } /* Name.Function.Magic */
+    .highlight .vc { color: #e36209 } /* Name.Variable.Class */
+    .highlight .vg { color: #e36209 } /* Name.Variable.Global */
+    .highlight .vi { color: #e36209 } /* Name.Variable.Instance */
+    .highlight .vm { color: #e36209 } /* Name.Variable.Magic */
+    .highlight .il { color: #005cc5 } /* Literal.Number.Integer.Long */
+
+    /* Dark mode syntax highlighting */
+    .dark .highlight { background: #161b22; }
+    .dark .highlight .c { color: #8b949e; font-style: italic }
+    .dark .highlight .err { color: #f85149; background-color: transparent }
+    .dark .highlight .k { color: #ff7b72; font-weight: bold }
+    .dark .highlight .o { color: #ff7b72 }
+    .dark .highlight .ch { color: #8b949e; font-style: italic }
+    .dark .highlight .cm { color: #8b949e; font-style: italic }
+    .dark .highlight .cp { color: #ff7b72; font-weight: bold }
+    .dark .highlight .cpf { color: #8b949e; font-style: italic }
+    .dark .highlight .c1 { color: #8b949e; font-style: italic }
+    .dark .highlight .cs { color: #8b949e; font-weight: bold; font-style: italic }
+    .dark .highlight .gd { color: #ffa198; background-color: #490202 }
+    .dark .highlight .gi { color: #56d364; background-color: #0f5323 }
+    .dark .highlight .go { color: #8b949e }
+    .dark .highlight .gp { color: #f0883e; font-weight: bold }
+    .dark .highlight .gs { font-weight: bold }
+    .dark .highlight .gu { color: #d2a8ff; font-weight: bold }
+    .dark .highlight .kc { color: #79c0ff; font-weight: bold }
+    .dark .highlight .kd { color: #ff7b72; font-weight: bold }
+    .dark .highlight .kn { color: #ff7b72; font-weight: bold }
+    .dark .highlight .kp { color: #ff7b72 }
+    .dark .highlight .kr { color: #ff7b72; font-weight: bold }
+    .dark .highlight .kt { color: #ff7b72 }
+    .dark .highlight .m { color: #79c0ff }
+    .dark .highlight .s { color: #a5d6ff }
+    .dark .highlight .na { color: #d2a8ff }
+    .dark .highlight .nb { color: #79c0ff }
+    .dark .highlight .nc { color: #d2a8ff; font-weight: bold }
+    .dark .highlight .no { color: #79c0ff }
+    .dark .highlight .nd { color: #d2a8ff }
+    .dark .highlight .ni { color: #f0883e }
+    .dark .highlight .ne { color: #ff7b72; font-weight: bold }
+    .dark .highlight .nf { color: #d2a8ff; font-weight: bold }
+    .dark .highlight .nl { color: #79c0ff }
+    .dark .highlight .nn { color: #d2a8ff }
+    .dark .highlight .nt { color: #7ee787 }
+    .dark .highlight .nv { color: #ffa657 }
+    .dark .highlight .ow { color: #ff7b72; font-weight: bold }
+    .dark .highlight .p { color: #c9d1d9 }
+    .dark .highlight .py { color: #79c0ff }
+    .dark .highlight .mb { color: #79c0ff }
+    .dark .highlight .mf { color: #79c0ff }
+    .dark .highlight .mh { color: #79c0ff }
+    .dark .highlight .mi { color: #79c0ff }
+    .dark .highlight .mo { color: #79c0ff }
+    .dark .highlight .sa { color: #a5d6ff }
+    .dark .highlight .sb { color: #a5d6ff }
+    .dark .highlight .sc { color: #a5d6ff }
+    .dark .highlight .dl { color: #a5d6ff }
+    .dark .highlight .sd { color: #a5d6ff }
+    .dark .highlight .s2 { color: #a5d6ff }
+    .dark .highlight .se { color: #a5d6ff }
+    .dark .highlight .sh { color: #a5d6ff }
+    .dark .highlight .si { color: #79c0ff }
+    .dark .highlight .sx { color: #a5d6ff }
+    .dark .highlight .sr { color: #a5d6ff }
+    .dark .highlight .s1 { color: #a5d6ff }
+    .dark .highlight .ss { color: #79c0ff }
+    .dark .highlight .bp { color: #79c0ff }
+    .dark .highlight .fm { color: #d2a8ff; font-weight: bold }
+    .dark .highlight .vc { color: #ffa657 }
+    .dark .highlight .vg { color: #ffa657 }
+    .dark .highlight .vi { color: #ffa657 }
+    .dark .highlight .vm { color: #ffa657 }
+    .dark .highlight .il { color: #79c0ff }
+
+    /* ==========================================================================
+       Prose/Markdown content styling (plain CSS for Tailwind CDN compatibility)
+       ========================================================================== */
+
+    .prose {
+        font-size: 1rem;
+        line-height: 1.75;
+        color: #374151;
+    }
+    .dark .prose {
+        color: #d1d5db;
+    }
+
+    /* Headings */
+    .prose h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        line-height: 1.3;
+    }
+    .dark .prose h1 {
+        color: #f9fafb;
+        border-bottom-color: #374151;
+    }
+    .prose > h1:first-child {
+        margin-top: 0;
+    }
+
+    .prose h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #111827;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.375rem;
+        border-bottom: 1px solid #e5e7eb;
+        line-height: 1.35;
+    }
+    .dark .prose h2 {
+        color: #f9fafb;
+        border-bottom-color: #374151;
+    }
+
+    .prose h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+    .dark .prose h3 {
+        color: #f3f4f6;
+    }
+
+    .prose h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .dark .prose h4 {
+        color: #e5e7eb;
+    }
+
+    /* Paragraphs */
+    .prose p {
+        margin-bottom: 1.25rem;
+    }
+
+    /* Links */
+    .prose a {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .prose a:hover {
+        text-decoration: underline;
+    }
+    .dark .prose a {
+        color: #60a5fa;
+    }
+
+    /* Lists */
+    .prose ul, .prose ol {
+        margin-bottom: 1.25rem;
+        padding-left: 1.5rem;
+    }
+    .prose ul {
+        list-style-type: disc;
+    }
+    .prose ol {
+        list-style-type: decimal;
+    }
+    .prose li {
+        margin-bottom: 0.375rem;
+    }
+    .prose li > ul, .prose li > ol {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Inline code */
+    .prose code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.875em;
+        background-color: #f3f4f6;
+        color: #1f2937;
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+    }
+    .dark .prose code {
+        background-color: #374151;
+        color: #e5e7eb;
+    }
+
+    /* Code blocks */
+    .prose pre {
+        margin-bottom: 1.5rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        position: relative;
+    }
+    .prose pre code {
+        display: block;
+        padding: 1rem 1.25rem;
+        background-color: transparent;
+        color: inherit;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        font-weight: 400;
+    }
+    .prose .highlight {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        position: relative;
+    }
+    .prose .highlight pre {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    /* Code block wrapper with copy button support */
+    .code-block-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    .code-block-wrapper .copy-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.375rem 0.625rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        z-index: 10;
+    }
+    .dark .code-block-wrapper .copy-button {
+        background-color: rgba(55, 65, 81, 0.9);
+        border-color: #4b5563;
+        color: #d1d5db;
+    }
+    .code-block-wrapper:hover .copy-button {
+        opacity: 1;
+    }
+    .code-block-wrapper .copy-button:hover {
+        background-color: #f9fafb;
+    }
+    .dark .code-block-wrapper .copy-button:hover {
+        background-color: #4b5563;
+    }
+    .code-block-wrapper .copy-button.copied {
+        color: #059669;
+    }
+    .dark .code-block-wrapper .copy-button.copied {
+        color: #34d399;
+    }
+
+    /* Tables */
+    .prose table {
+        width: 100%;
+        margin-bottom: 1.5rem;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+    }
+    .prose thead {
+        border-bottom: 2px solid #e5e7eb;
+    }
+    .dark .prose thead {
+        border-bottom-color: #4b5563;
+    }
+    .prose th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #111827;
+        background-color: #f9fafb;
+    }
+    .dark .prose th {
+        color: #f9fafb;
+        background-color: #1f2937;
+    }
+    .prose td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: top;
+    }
+    .dark .prose td {
+        border-bottom-color: #374151;
+    }
+    .prose tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .prose tbody tr:hover {
+        background-color: #f9fafb;
+    }
+    .dark .prose tbody tr:hover {
+        background-color: #1f2937;
+    }
+
+    /* Blockquotes */
+    .prose blockquote {
+        border-left: 4px solid #3b82f6;
+        padding-left: 1rem;
+        margin: 1.5rem 0;
+        color: #4b5563;
+        font-style: italic;
+    }
+    .dark .prose blockquote {
+        color: #9ca3af;
+        border-left-color: #60a5fa;
+    }
+
+    /* Horizontal rules */
+    .prose hr {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 2rem 0;
+    }
+    .dark .prose hr {
+        border-top-color: #374151;
+    }
+
+    /* Strong/Bold */
+    .prose strong {
+        font-weight: 600;
+        color: #111827;
+    }
+    .dark .prose strong {
+        color: #f9fafb;
+    }
+
+    /* Emphasis/Italic */
+    .prose em {
+        font-style: italic;
+    }
+
+    /* Images */
+    .prose img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin: 1.5rem 0;
+    }
+
+    /* ==========================================================================
+       Table of Contents styling
+       ========================================================================== */
+
+    .toc {
+        font-size: 0.875rem;
+    }
+    .toc ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .toc li {
+        margin-bottom: 0.25rem;
+    }
+    .toc a {
+        display: block;
+        padding: 0.375rem 0.75rem;
+        color: #6b7280;
+        text-decoration: none;
+        border-radius: 0.375rem;
+        transition: all 0.15s ease-in-out;
+    }
+    .toc a:hover {
+        color: #2563eb;
+        background-color: #f3f4f6;
+    }
+    .dark .toc a {
+        color: #9ca3af;
+    }
+    .dark .toc a:hover {
+        color: #60a5fa;
+        background-color: #1f2937;
+    }
+    .toc a.active {
+        color: #2563eb;
+        background-color: #eff6ff;
+        font-weight: 500;
+    }
+    .dark .toc a.active {
+        color: #60a5fa;
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+    .toc ul ul {
+        padding-left: 0.75rem;
+    }
+    .toc ul ul a {
+        font-size: 0.8125rem;
+    }
+
+    /* Reading progress indicator */
+    .reading-progress {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        z-index: 50;
+        transition: width 0.1s ease-out;
+    }
+
+    /* Smooth scroll for anchor links */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Anchor link offset for sticky header */
+    .prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id] {
+        scroll-margin-top: 5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Reading progress bar -->
+<div class="reading-progress" id="reading-progress"></div>
+
+<div class="max-w-7xl mx-auto px-4 py-6 lg:py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-6" aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <li class="flex items-center">
+                <a href="{% url 'vagt:board' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    Hjem
+                </a>
+            </li>
+            <li class="flex items-center">
+                <svg class="w-4 h-4 mx-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <a href="{% url 'vagt:docs' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    Dokumentation
+                </a>
+            </li>
+            <li class="flex items-center">
+                <svg class="w-4 h-4 mx-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-medium text-gray-900 dark:text-white">{{ title }}</span>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+        <!-- Left sidebar: Document navigation -->
+        <aside class="hidden lg:block lg:col-span-2">
+            <div class="sticky top-24">
+                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                    Dokumentation
+                </h3>
+                <nav class="space-y-1">
+                    {% for slug, doc_title in docs.items %}
+                    <a href="{% url 'vagt:docs_page' slug %}"
+                       class="flex items-center px-3 py-2 text-sm rounded-lg transition-colors
+                              {% if slug == current_slug %}
+                              bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium
+                              {% else %}
+                              text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
+                              {% endif %}">
+                        <!-- Icons for each doc type -->
+                        {% if slug == "models" %}
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                        </svg>
+                        {% elif slug == "views" %}
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        {% elif slug == "api" %}
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {% elif slug == "deployment" %}
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+                        </svg>
+                        {% endif %}
+                        {{ doc_title }}
+                    </a>
+                    {% endfor %}
+                </nav>
+
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <a href="{% url 'vagt:docs' %}"
+                       class="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Alle emner
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content area -->
+        <main class="lg:col-span-7">
+            <!-- Mobile navigation dropdown -->
+            <div class="lg:hidden mb-6">
+                <label for="doc-select" class="sr-only">Vaelg dokumentation</label>
+                <div class="relative">
+                    <select id="doc-select"
+                            onchange="window.location.href=this.value"
+                            class="block w-full pl-3 pr-10 py-2.5 text-base border border-gray-300 dark:border-gray-600
+                                   rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                   appearance-none cursor-pointer">
+                        {% for slug, doc_title in docs.items %}
+                        <option value="{% url 'vagt:docs_page' slug %}" {% if slug == current_slug %}selected{% endif %}>
+                            {{ doc_title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article content -->
+            <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="p-6 sm:p-8 lg:p-10">
+                    <div class="prose" id="doc-content">
+                        {{ content|safe }}
+                    </div>
+                </div>
+
+                <!-- Previous/Next navigation -->
+                <div class="border-t border-gray-200 dark:border-gray-700 px-6 sm:px-8 lg:px-10 py-4">
+                    <div class="flex justify-between items-center">
+                        {% if prev_doc %}
+                        <a href="{% url 'vagt:docs_page' prev_doc.slug %}"
+                           class="group flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <svg class="w-4 h-4 mr-2 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            <span class="hidden sm:inline mr-1">Forrige:</span>
+                            {{ prev_doc.title }}
+                        </a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+
+                        {% if next_doc %}
+                        <a href="{% url 'vagt:docs_page' next_doc.slug %}"
+                           class="group flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <span class="hidden sm:inline mr-1">Naeste:</span>
+                            {{ next_doc.title }}
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <!-- Right sidebar: Table of contents -->
+        <aside class="hidden xl:block xl:col-span-3">
+            <div class="sticky top-24">
+                {% if toc %}
+                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                    Indhold
+                </h3>
+                <nav class="toc" id="toc-nav" aria-label="Table of contents">
+                    {{ toc|safe }}
+                </nav>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    // =========================================================================
+    // Reading progress indicator
+    // =========================================================================
+    const progressBar = document.getElementById('reading-progress');
+    const docContent = document.getElementById('doc-content');
+
+    if (progressBar && docContent) {
+        function updateProgress() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.scrollY;
+            const progress = Math.min((scrollTop / documentHeight) * 100, 100);
+            progressBar.style.width = progress + '%';
+        }
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+    }
+
+    // =========================================================================
+    // Copy button for code blocks
+    // =========================================================================
+    function addCopyButtons() {
+        const codeBlocks = document.querySelectorAll('.prose pre, .prose .highlight');
+
+        codeBlocks.forEach(function(block) {
+            // Skip if already wrapped
+            if (block.parentElement.classList.contains('code-block-wrapper')) {
+                return;
+            }
+
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+
+            // Create copy button
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.textContent = 'Kopier';
+            button.type = 'button';
+            button.setAttribute('aria-label', 'Kopier kode til udklipsholder');
+
+            // Insert wrapper
+            block.parentNode.insertBefore(wrapper, block);
+            wrapper.appendChild(block);
+            wrapper.appendChild(button);
+
+            // Click handler
+            button.addEventListener('click', function() {
+                const code = block.querySelector('code') || block;
+                const text = code.textContent || code.innerText;
+
+                navigator.clipboard.writeText(text).then(function() {
+                    button.textContent = 'Kopieret!';
+                    button.classList.add('copied');
+
+                    setTimeout(function() {
+                        button.textContent = 'Kopier';
+                        button.classList.remove('copied');
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Failed to copy:', err);
+                    button.textContent = 'Fejl';
+                    setTimeout(function() {
+                        button.textContent = 'Kopier';
+                    }, 2000);
+                });
+            });
+        });
+    }
+
+    addCopyButtons();
+
+    // =========================================================================
+    // Active TOC highlighting based on scroll position
+    // =========================================================================
+    const tocNav = document.getElementById('toc-nav');
+
+    if (tocNav) {
+        const tocLinks = tocNav.querySelectorAll('a');
+        const headings = [];
+
+        tocLinks.forEach(function(link) {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const id = href.slice(1);
+                const heading = document.getElementById(id);
+                if (heading) {
+                    headings.push({ link: link, element: heading });
+                }
+            }
+        });
+
+        function updateActiveLink() {
+            const scrollTop = window.scrollY;
+            const offset = 100; // Account for sticky header
+
+            let activeHeading = null;
+
+            for (let i = headings.length - 1; i >= 0; i--) {
+                const { element } = headings[i];
+                if (element.offsetTop - offset <= scrollTop) {
+                    activeHeading = headings[i];
+                    break;
+                }
+            }
+
+            tocLinks.forEach(function(link) {
+                link.classList.remove('active');
+            });
+
+            if (activeHeading) {
+                activeHeading.link.classList.add('active');
+            }
+        }
+
+        window.addEventListener('scroll', updateActiveLink, { passive: true });
+        updateActiveLink();
+    }
+})();
+</script>
+{% endblock %}

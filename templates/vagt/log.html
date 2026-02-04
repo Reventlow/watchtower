@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Log{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Ændringslog</h1>
+        <a href="{% url 'vagt:board' %}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400">
+            ← Tilbage til tavlen
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tidspunkt</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Controller</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Fra</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Til</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Bruger</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for log in logs %}
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-750">
+                    <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                        {{ log.changed_at|date:"d/m H:i" }}
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                        {{ log.controller.callsign }} {{ log.controller.name }}
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded
+                            {% if log.old_status == 'MOEDT' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                            {% elif log.old_status == 'GAAET' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                            {% else %}bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200{% endif %}">
+                            {{ log.get_old_status_display }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded
+                            {% if log.new_status == 'MOEDT' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                            {% elif log.new_status == 'GAAET' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                            {% else %}bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200{% endif %}">
+                            {{ log.get_new_status_display }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                        {{ log.changed_by.username|default:"System" }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                        Ingen ændringer endnu.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

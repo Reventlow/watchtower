@@ -1,0 +1,16 @@
+{# Redirect to board view for backward compatibility #}
+{% extends "base.html" %}
+
+{% block title %}Vagtplan{% endblock %}
+
+{% block content %}
+<script>
+    // Redirect to the main board view
+    window.location.href = "{% url 'vagt:board' %}";
+</script>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <p class="text-gray-600 dark:text-gray-400">
+        Omdirigerer til vagtplan...
+    </p>
+</div>
+{% endblock %}

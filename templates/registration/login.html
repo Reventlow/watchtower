@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Log ind{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-12rem)] flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+        <!-- Logo and header -->
+        <div class="text-center mb-8">
+            <svg class="w-16 h-16 mx-auto text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <h1 class="mt-4 text-3xl font-bold text-gray-900 dark:text-white">Watchtower</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Log ind for at fortsætte</p>
+        </div>
+
+        <!-- Login form -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 theme-transition">
+            {% if form.errors %}
+            <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-red-700 dark:text-red-300 text-sm">Forkert brugernavn eller adgangskode</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <!-- Username field -->
+                <div class="mb-6">
+                    <label for="id_username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Brugernavn
+                    </label>
+                    <input type="text"
+                           name="username"
+                           id="id_username"
+                           autocomplete="username"
+                           required
+                           autofocus
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+                                  bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                  placeholder-gray-400 dark:placeholder-gray-500
+                                  theme-transition"
+                           placeholder="Indtast brugernavn">
+                </div>
+
+                <!-- Password field -->
+                <div class="mb-6">
+                    <label for="id_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Adgangskode
+                    </label>
+                    <input type="password"
+                           name="password"
+                           id="id_password"
+                           autocomplete="current-password"
+                           required
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+                                  bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                  placeholder-gray-400 dark:placeholder-gray-500
+                                  theme-transition"
+                           placeholder="Indtast adgangskode">
+                </div>
+
+                <!-- Hidden next field -->
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <!-- Submit button -->
+                <button type="submit"
+                        class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700
+                               text-white font-medium rounded-lg
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                               dark:focus:ring-offset-gray-800
+                               transition-colors duration-200">
+                    Log ind
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <p class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            FynBus Vagtplan
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+/* Watchtower (Vagt) - Main Stylesheet */
+
+/* Reset and base styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Layout */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #ecf0f1;
+    margin-top: 2rem;
+}
+
+/* Container */
+.container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Shift board placeholder */
+#shift-board {
+    margin-top: 2rem;
+    padding: 2rem;
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    text-align: center;
+    color: #7f8c8d;
+}

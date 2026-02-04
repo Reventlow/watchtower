@@ -1,0 +1,68 @@
+# =============================================================================
+# Watchtower (Vagt) - Docker Compose Configuration
+# =============================================================================
+# Production-ready configuration with SQLite persistence
+
+services:
+  web:
+    image: elohite/watchtower:0.1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vagt-web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persistent SQLite database
+      - sqlite_data:/data
+      # Persistent static files (optional, for nginx)
+      - static_files:/app/staticfiles
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY in .env}
+      - DJANGO_DEBUG=False
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      - DATABASE_URL=sqlite:////data/db.sqlite3
+      - TIME_ZONE=Europe/Copenhagen
+      - LANGUAGE_CODE=da
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  sqlite_data:
+    name: vagt-sqlite-data
+  static_files:
+    name: vagt-static-files
+
+# =============================================================================
+# Usage:
+# =============================================================================
+# 1. Create .env file with required variables:
+#    DJANGO_SECRET_KEY=your-secret-key-here
+#    DJANGO_ALLOWED_HOSTS=vagt.fynbus.net,localhost
+#
+# 2. Start the service:
+#    docker-compose up -d
+#
+# 3. Create superuser (first time only):
+#    docker-compose exec web python manage.py createsuperuser
+#
+# 4. View logs:
+#    docker-compose logs -f web
+#
+# 5. Stop the service:
+#    docker-compose down
+#
+# 6. Backup database:
+#    docker cp vagt-web:/data/db.sqlite3 ./backup/db.sqlite3
+# =============================================================================
