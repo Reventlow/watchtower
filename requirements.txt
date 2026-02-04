@@ -7,6 +7,7 @@ django-htmx>=1.17
 djangorestframework>=3.14
 whitenoise>=6.6
 gunicorn>=21.0
+markdown>=3.5
 
 # Development dependencies (install with: pip install -r requirements-dev.txt)
 # pytest>=7.4
