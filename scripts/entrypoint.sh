@@ -7,6 +7,9 @@
 
 set -e
 
+# Ensure virtual environment is in PATH
+export PATH="/home/vagt/venv/bin:$PATH"
+
 echo "========================================"
 echo "Watchtower (Vagt) - Starting up..."
 echo "========================================"
