@@ -157,10 +157,13 @@
                         <a href="{% url 'vagt:profile' %}" class="hidden sm:inline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                             {{ user.username }}
                         </a>
-                        <a href="{% url 'logout' %}"
-                           class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md theme-transition">
-                            Log ud
-                        </a>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md theme-transition">
+                                Log ud
+                            </button>
+                        </form>
                         {% endif %}
                         <button id="theme-toggle"
                                 type="button"
@@ -218,10 +221,13 @@
                         Admin
                     </a>
                     {% endif %}
-                    <a href="{% url 'logout' %}"
-                       class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Log ud
-                    </a>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Log ud
+                        </button>
+                    </form>
                     {% else %}
                     <a href="{% url 'login' %}"
                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
