@@ -21,6 +21,10 @@ echo "Checking database..."
 echo "Running database migrations..."
 python manage.py migrate --noinput
 
+# Collect static files (in case volume overwrites build-time files)
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
+
 # Create cache table if using database cache
 # python manage.py createcachetable --dry-run 2>/dev/null && python manage.py createcachetable
 
