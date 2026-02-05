@@ -24,11 +24,13 @@
                     class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150
                            {% if controller.status == status_value %}
                                {% if status_value == 'MOEDT' %}
-                                   bg-red-500 shadow-lg scale-110
-                               {% elif status_value == 'GAAET' %}
                                    bg-green-500 shadow-lg scale-110
-                               {% else %}
-                                   bg-amber-500 shadow-lg scale-110
+                               {% elif status_value == 'GAAET' %}
+                                   bg-red-500 shadow-lg scale-110
+                               {% elif status_value == 'SYG' %}
+                                   bg-yellow-500 shadow-lg scale-110
+                               {% elif status_value == 'FERIE' %}
+                                   bg-gray-500 shadow-lg scale-110
                                {% endif %}
                            {% else %}
                                bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 hover:scale-105
