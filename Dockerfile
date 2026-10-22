@@ -54,7 +54,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DATA_DIR=/data
 
 # Install runtime dependencies
+# ca-certificates is listed explicitly so every build pulls the current Debian bundle
+# (e.g. the 2026-10 eMudhra emSign G3 / Comodo AAA distrust) even from a stale base layer.
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     curl \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
