@@ -20,6 +20,7 @@ Watchtower replaces a physical magnetic board where ticket controllers' status m
 - **Audit Trail**: Complete logging of all status changes with timestamps and user attribution
 - **Controller Management**: CRUD operations for managing controllers
 - **User Authentication**: Login required for all board operations
+- **Microsoft Sign-in (optional)**: Entra ID SSO, so MFA and Conditional Access apply; the login page is then Microsoft only, and admin pages are for local break-glass accounts only ([docs/sso.md](docs/sso.md))
 - **Dark Mode**: System-aware theme with manual toggle
 - **REST API**: Read-only API for integration with external systems
 - **Token Authentication**: Personal access tokens for API access
@@ -222,6 +223,7 @@ See [docs/api.md](docs/api.md) for full API documentation.
 | `DJANGO_SETTINGS_MODULE` | `config.settings.base` | Settings module path |
 | `DATABASE_URL` | SQLite | Database connection URL |
 | `DJANGO_LOG_LEVEL` | `INFO` | Logging level |
+| `VAGT_SSO_*`, `VAGT_SESSION_MAX_HOURS` | off | Microsoft sign-in, see [docs/sso.md](docs/sso.md) |
 
 See `.env.example` for all available options.
 
@@ -231,10 +233,12 @@ See `.env.example` for all available options.
 - [Views](docs/views.md) - View functions and templates
 - [REST API](docs/api.md) - API endpoints and authentication
 - [Deployment](docs/deployment.md) - Production deployment guide
+- [Microsoft Sign-in](docs/sso.md) - Entra ID SSO with MFA, rollout and break-glass accounts
 
 ## Security Considerations
 
 - All board operations require authentication
+- Optional Microsoft sign-in (Entra ID): MFA, Conditional Access, tenant pinned, group check at every login
 - CSRF protection on all POST requests
 - Passwords validated against common patterns
 - Production settings enforce HTTPS and secure cookies
