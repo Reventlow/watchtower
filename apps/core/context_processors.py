@@ -30,3 +30,14 @@ def version_info(request):
         "app_version": version,
         "app_version_date": version_date,
     }
+
+
+def admin_access(request):
+    """``admin_access``: show the Admin and Dokumentation links.
+
+    Superusers signed in with a local account only; a Microsoft (SSO)
+    session has no admin pages (apps/accounts/access.py).
+    """
+    from apps.accounts.access import has_admin_access
+
+    return {"admin_access": has_admin_access(request)}

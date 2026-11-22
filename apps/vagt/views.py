@@ -15,6 +15,8 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
+from apps.accounts.access import has_admin_access
+
 from .models import Controller, StatusLog
 
 
@@ -194,11 +196,18 @@ def controller_delete(request: HttpRequest, pk: int) -> HttpResponse:
 @login_required
 @require_http_methods(["GET", "POST"])
 def profile_view(request: HttpRequest) -> HttpResponse:
-    """User profile page with password change."""
+    """User profile page with password change.
+
+    With Microsoft sign-in on (VAGT_SSO_ENABLED), nobody signs in to Vagt
+    with a password, so the form is hidden and a POST changes nothing: the
+    password lives in Microsoft. Local administrator accounts change theirs
+    in Django admin. A user without a usable password gets no form either.
+    """
+    can_change_password = not settings.SSO_ENABLED and request.user.has_usable_password()
     password_form = PasswordChangeForm(request.user)
     password_changed = False
 
-    if request.method == "POST":
+    if request.method == "POST" and can_change_password:
         password_form = PasswordChangeForm(request.user, request.POST)
         if password_form.is_valid():
             user = password_form.save()
@@ -209,6 +218,7 @@ def profile_view(request: HttpRequest) -> HttpResponse:
     return render(request, "vagt/profile.html", {
         "password_form": password_form,
         "password_changed": password_changed,
+        "can_change_password": can_change_password,
     })
 
 
@@ -223,6 +233,7 @@ DOCS_LIST = [
     ("views", "Views & Endpoints"),
     ("api", "REST API"),
     ("deployment", "Deployment"),
+    ("sso", "Microsoft-login (MFA)"),
 ]
 
 # Dict version for lookups
@@ -232,8 +243,8 @@ DOCS = dict(DOCS_LIST)
 @login_required
 @require_GET
 def docs_index(request: HttpRequest) -> HttpResponse:
-    """Documentation index page. Superuser only."""
-    if not request.user.is_superuser:
+    """Documentation index page. Superusers on a local login only."""
+    if not has_admin_access(request):
         return redirect("vagt:board")
     return render(request, "vagt/docs/index.html", {"docs": DOCS})
 
@@ -241,8 +252,8 @@ def docs_index(request: HttpRequest) -> HttpResponse:
 @login_required
 @require_GET
 def docs_page(request: HttpRequest, slug: str) -> HttpResponse:
-    """Render a documentation page from markdown. Superuser only."""
-    if not request.user.is_superuser:
+    """Render a documentation page from markdown. Superusers on a local login only."""
+    if not has_admin_access(request):
         return redirect("vagt:board")
     if slug not in DOCS:
         return redirect("vagt:docs")

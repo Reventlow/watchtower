@@ -193,6 +193,14 @@ services:
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | ` ` | Origins for CSRF |
 | `DJANGO_LOG_LEVEL` | `WARNING` | Logging verbosity |
 
+### Microsoft Sign-in (Optional)
+
+`VAGT_SSO_ENABLED`, `VAGT_SSO_TENANT_ID`, `VAGT_SSO_CLIENT_ID`,
+`VAGT_SSO_CLIENT_SECRET`, `VAGT_SSO_REQUIRED_GROUPS`, `VAGT_SSO_ONLY`,
+`VAGT_SSO_BREAK_GLASS_USERS` and friends switch on sign-in through Entra ID
+(MFA). Keep them in an env file, never in the compose file. See
+[Microsoft Sign-in](sso.md) for the Entra set-up and the rollout.
+
 ### Email (Optional)
 
 | Variable | Description |
@@ -270,6 +278,7 @@ Before going live:
 - [ ] `DJANGO_CSRF_TRUSTED_ORIGINS` includes your domain
 - [ ] Database is not exposed to public network
 - [ ] Admin password is strong
+- [ ] Microsoft sign-in on, and `VAGT_SSO_ONLY=1` with a break-glass account (see [Microsoft Sign-in](sso.md))
 - [ ] Firewall allows only necessary ports (80, 443)
 - [ ] Docker containers run as non-root user
 - [ ] Logs do not contain sensitive data

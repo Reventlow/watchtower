@@ -1,0 +1,17 @@
+# Keep local state and secrets out of the image (Dockerfile does COPY . .).
+.git
+.github
+.venv
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+db.sqlite3*
+.coverage
+.pytest_cache
+.claude
+media/*
+!media/.gitkeep
+staticfiles
+*.egg-info

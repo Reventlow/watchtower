@@ -16,6 +16,42 @@
 
         <!-- Login form -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 theme-transition">
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg" role="alert">
+                <span class="text-red-700 dark:text-red-300 text-sm">{{ message }}</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% if sso_enabled %}
+            {% comment %}
+                Microsoft only: with SSO on there is no password login on this page.
+                (Local administrator accounts use Django admin's own login.)
+                A POST form, not a link: allauth only starts the Microsoft sign-in on
+                POST (a GET shows its own confirm page), which keeps other sites from
+                logging a visitor in unasked.
+            {% endcomment %}
+            <form method="post" action="{% url 'microsoft_login' %}">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                <button type="submit"
+                        class="w-full py-3 px-4 flex items-center justify-center gap-3
+                               bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                               dark:focus:ring-offset-gray-800
+                               transition-colors duration-200">
+                    <svg width="18" height="18" viewBox="0 0 21 21" aria-hidden="true">
+                        <rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+                    </svg>
+                    <span>Log ind med Microsoft</span>
+                </button>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">Brug din FynBus Microsoft-konto.</p>
+            {% endif %}
+
+            {% if show_password_form %}
             {% if form.errors %}
             <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                 <div class="flex items-center">
@@ -27,7 +63,7 @@
             </div>
             {% endif %}
 
-            <form method="post" action="{% url 'login' %}">
+            <form method="post">
                 {% csrf_token %}
 
                 <!-- Username field -->
@@ -80,6 +116,7 @@
                     Log ind
                 </button>
             </form>
+            {% endif %}
         </div>
 
         <!-- Footer -->
